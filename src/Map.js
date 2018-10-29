@@ -1,5 +1,10 @@
 import React, {Component} from 'react'
 
+const ApiKey = 'AIzaSyCdH-NvXfoWzdwnhd2xYP7DsIQ54kSRAic';
+const FAPI_CLIENT_ID = 'H4MWPFTV2MD22GEGS2HYNECXWWNOQBU0AHIB5PSJG0U4LRN4';
+const FAPI_CLIENT_SECRET = 'FEJNQMXTTUJBI1MCVMIRKGAGRAUKFSLR423UKN0LSII3YTT1';
+let map;
+
 class Map extends Component{
     constructor(props){
         super(props);
@@ -11,7 +16,6 @@ class Map extends Component{
     };
 
     componentDidMount() {
-        const ApiKey = 'AIzaSyCdH-NvXfoWzdwnhd2xYP7DsIQ54kSRAic';
         const script = document.createElement('script');
         script.src = `https://maps.googleapis.com/maps/api/js?key=${ApiKey}`;
         script.async = true;
@@ -27,37 +31,34 @@ class Map extends Component{
             let bounds = new window.google.maps.LatLngBounds();
             let markers =[];
             let locations = [
-                {title: 'Riviera Bakehouse', location: {lat: 41.0107634, lng: -73.8490496}},
+                {title: 'Riviera Bakehouse', location: {lat: 41.0111915, lng: -73.8486300}},
                 {title: 'By the Way Bakery', location: {lat: 40.9974559, lng: -73.8778848}},
                 {title: 'Red Barn Bakery', location: {lat: 41.038161, lng: -73.870015}},
                 {title: 'Domenicks Nepperhan Italian', location: {lat: 40.974258, lng: -73.86907}},
                 {title: 'Lulu Cake Boutique', location: {lat: 41.0032598, lng: -73.8564513}}
             ];
-            let map = new window.google.maps.Map(this.mapRef.current, {
-                center: {lat: 41.0085382, lng: -73.8683036},
-                zoom: 12,
+            map = new window.google.maps.Map(this.mapRef.current, {
+                center: {lat: this.props.lat, lng: this.props.lng},
+                zoom: this.props.zoom,
             });
             for (let i = 0; i < locations.length; i++) {
-                // Get the position from the location array.
-
                 let position = locations[i].location;
                 let title = locations[i].title;
-                // Create a marker per location, and put into markers array.
                 let marker = new window.google.maps.Marker({
                     position: position,
                     title: title,
                     animation: window.google.maps.Animation.DROP,
                     id: i
                 });
-                // Push the marker to our array of markers.
                 markers.push(marker);
                 markers[i].setMap(map);
                 bounds.extend(markers[i].position);
-                // Create an onclick event to open an infowindow at each marker.
-                /*
-                marker.addListener('click', function() {
-                    populateInfoWindow(this, largeInfowindow);
-                }); */
+                let info = new window.google.maps.InfoWindow({
+                    content: `${marker.title}`
+                });
+                marker.addListener('click', ()=> {
+                    info.open(map, marker);
+                });
             }
             map.fitBounds(bounds);
         }
@@ -66,7 +67,12 @@ class Map extends Component{
 
     render(){
         return(
-            <div className='map' ref={this.mapRef}>
+            <div
+                className='map'
+                ref={this.mapRef}
+                role='application'
+                aria-label='map'
+            >
             </div>
         )
     }

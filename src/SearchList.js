@@ -12,7 +12,7 @@ class SearchList extends Component{
 
     clearQuery = () => {
         this.setState({ query: '' })
-    }
+    };
 
     render(){
         return(

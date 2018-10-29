@@ -15,6 +15,14 @@ class Map extends Component{
         isScriptReady: false,
     };
 
+    displayFInfo = (m) => {
+        let p = m.position.lat + m.position.lng;
+        let request = new Request(`https://api.foursquare.com/v2/venues/search?ll=${p}&client_id=${FAPI_CLIENT_ID}&client_secret=${FAPI_CLIENT_SECRET}&llAcc=10&v=20181029`,{
+            method: 'GET'
+        });
+        fetch(request).then((response) => console.log(response.json()));
+    };
+
     componentDidMount() {
         const script = document.createElement('script');
         script.src = `https://maps.googleapis.com/maps/api/js?key=${ApiKey}`;
@@ -31,7 +39,7 @@ class Map extends Component{
             let bounds = new window.google.maps.LatLngBounds();
             let markers =[];
             let locations = [
-                {title: 'Riviera Bakehouse', location: {lat: 41.0111915, lng: -73.8486300}},
+                {title: 'Riviera Bakehouse', location: {"lat": 41.0111915, "lng": -73.8486300}},
                 {title: 'By the Way Bakery', location: {lat: 40.9974559, lng: -73.8778848}},
                 {title: 'Red Barn Bakery', location: {lat: 41.038161, lng: -73.870015}},
                 {title: 'Domenicks Nepperhan Italian', location: {lat: 40.974258, lng: -73.86907}},
@@ -57,7 +65,9 @@ class Map extends Component{
                     content: `${marker.title}`
                 });
                 marker.addListener('click', ()=> {
+                    console.log(marker.position);
                     info.open(map, marker);
+                    this.displayFInfo(marker);
                 });
             }
             map.fitBounds(bounds);

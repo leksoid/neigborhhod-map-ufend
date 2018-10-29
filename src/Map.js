@@ -15,9 +15,9 @@ class Map extends Component{
         isScriptReady: false,
     };
 
-    displayFInfo = (m) => {
-        let p = m.position.lat + m.position.lng;
-        let request = new Request(`https://api.foursquare.com/v2/venues/search?ll=${p}&client_id=${FAPI_CLIENT_ID}&client_secret=${FAPI_CLIENT_SECRET}&llAcc=10&v=20181029`,{
+    displayFInfo = (marker) => {
+        let p = marker.getPosition().toUrlValue();
+        let request = new Request(`https://api.foursquare.com/v2/venues/search?ll=${p}&client_id=${FAPI_CLIENT_ID}&client_secret=${FAPI_CLIENT_SECRET}&llAcc=10&radius=100&v=20181029`,{
             method: 'GET'
         });
         fetch(request).then((response) => console.log(response.json()));

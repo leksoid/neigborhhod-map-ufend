@@ -106,23 +106,34 @@ class Map extends Component{
     };
 
     getVenueId = (marker) => {
-        let venueID = null;
         let p = marker.getPosition().toUrlValue();
         let request = new Request(`https://api.foursquare.com/v2/venues/search?ll=${p}&client_id=${FAPI_CLIENT_ID}&query=${marker.title}&client_secret=${FAPI_CLIENT_SECRET}&llAcc=1000&radius=1000&v=20181029&limit=1`,{
             method: 'GET'
         });
-        fetch(request)
+        return fetch(request)
             .then((response) => response.json())
             .then((result) => {
-                venueID = result.response.venues.length > 0 ? result.response.venues[0].id : "No venue found in DB";
-                console.log(venueID);
+                return result.response.venues.length > 0 ? result.response.venues[0].id : "No venue found in DB";
             });
-        return venueID;
     };
 
-    displayFoursquareData = (marker) => {
-
-    }
+    displayFoursquareData = (marker,info) => {
+        this.getVenueId(marker)
+            .then(id => {
+                let detailsRequest = new Request(`https://api.foursquare.com/v2/venues/${id}?client_id=${FAPI_CLIENT_ID}&client_secret=${FAPI_CLIENT_SECRET}&v=20181029`);
+                fetch(detailsRequest)
+                    .then((response)=>response.json())
+                    .then((result)=>{
+                        info
+                            .setContent(`<div id="${result.response.venue.id}">
+                                            <h4><a href="${result.response.venue.url}" target="_blank">${marker.title}</a></h4>
+                                            <h5>People say!:</h5>
+                                            <p>...<i>${result.response.venue.tips.groups[0].items[0].text}</i>...</p>
+                                            <img src="${result.response.venue.bestPhoto.prefix}100x100${result.response.venue.bestPhoto.suffix}"> 
+                                         </div>`)
+                    })
+            });
+    };
 
     componentDidMount() {
         const script = document.createElement('script');
@@ -163,13 +174,11 @@ class Map extends Component{
                 markers.push(marker);
                 markers[i].setMap(map);
                 bounds.extend(markers[i].position);
-                let info = new window.google.maps.InfoWindow({
-                    content: `${marker.title}`
-                });
+                let info = new window.google.maps.InfoWindow();
                 marker.addListener('click', ()=> {
                     console.log(marker.position);
                     info.open(map, marker);
-                    this.getVenueId(marker);
+                    this.displayFoursquareData(marker,info);
                 });
             }
             map.fitBounds(bounds);

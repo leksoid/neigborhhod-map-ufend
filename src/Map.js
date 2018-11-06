@@ -125,11 +125,12 @@ class Map extends Component{
                     .then((response)=>response.json())
                     .then((result)=>{
                         info
-                            .setContent(`<div id="${result.response.venue.id}">
+                            .setContent(`<div class="infoWindow" id="${result.response.venue.id}">
                                             <h4><a href="${result.response.venue.url}" target="_blank">${marker.title}</a></h4>
-                                            <h5>People say!:</h5>
+                                            <h5>People say!</h5>
                                             <p>...<i>${result.response.venue.tips.groups[0].items[0].text}</i>...</p>
                                             <img src="${result.response.venue.bestPhoto.prefix}100x100${result.response.venue.bestPhoto.suffix}"> 
+                                            <p>Provided by <a href="https://developer.foursquare.com/" target="_blank">Foursquare API</a></p>
                                          </div>`)
                     })
             });
@@ -178,6 +179,7 @@ class Map extends Component{
                 marker.addListener('click', ()=> {
                     console.log(marker.position);
                     info.open(map, marker);
+                    marker.setAnimation(window.google.maps.Animation.BOUNCE);
                     this.displayFoursquareData(marker,info);
                 });
             }

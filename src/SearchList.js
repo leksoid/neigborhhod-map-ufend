@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import escapeRegExp from 'escape-string-regexp'
 
 class SearchList extends Component{
 
@@ -10,14 +11,34 @@ class SearchList extends Component{
         this.setState({query: query.trim()})
     };
 
-    clearQuery = () => {
-        this.setState({ query: '' })
-    };
-
     render(){
+        const {query} = this.state;
+        let searchResults;
+        // TODO get a list of venues queried by 'Bakery' and display as a list
+        if(query){
+            const match = new RegExp(escapeRegExp(query),'i')
+            searchResults = this.props.locations.filter((venues) => match.test(venues.name))
+        } else {
+            searchResults = this.props.locations;
+        }
         return(
             <div>
+                <input
+                    className='search-venues'
+                    type='text'
+                    placeholder='Search venues ...'
+                    value={query}
+                    onChange={(event)=> this.updateQeury(event.target.value)}
+                />
+                <ul className='venues-list'>
+                    {searchResults.map((venue)=>(
+                        <li key={venue.id}>
+                            <p>{venue.name}</p>
+                        </li>
+                        )
 
+                    )}
+                </ul>
             </div>
         )
     }

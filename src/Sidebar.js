@@ -10,7 +10,9 @@ class Sidebar extends Component{
                         Westchester Bakeries
                     </h1>
                 </div>
-                <SearchList/>
+                <SearchList
+                    locations={this.props.locations}
+                />
                 <div className='footer'></div>
             </div>
         )

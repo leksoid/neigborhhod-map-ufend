@@ -6,19 +6,34 @@ import Map from "./Map";
 const FAPI_CLIENT_ID = 'H4MWPFTV2MD22GEGS2HYNECXWWNOQBU0AHIB5PSJG0U4LRN4';
 const FAPI_CLIENT_SECRET = 'FEJNQMXTTUJBI1MCVMIRKGAGRAUKFSLR423UKN0LSII3YTT1';
 
+class MarkerService {
+    // TODO make Add and Activate functions
+
+    add(venue){
+        this.activeMarker = venue;
+        console.log(this.activeMarker);
+    }
+    activate(){
+
+    }
+}
+
 class App extends Component {
 
     state = {
         baseLat: 29.7844913,
         baseLng: -95.7800231,
         zoom: 12,
-        locations:[]
+        locations:[],  // TODO pass to search
+        filteredLocations:[] // TODO pass to map
     };
 
     componentDidMount() {
         this.getAllVenuesOnMapLoad().then((locations) => {
             this.setState({locations})
         })
+        // TODO init new marker service
+        this.markerService = new MarkerService();
     };
 
     getAllVenuesOnMapLoad = () => {
@@ -33,9 +48,11 @@ class App extends Component {
         return (
             <div className='app'>
                 <Sidebar
+                    addMarkerToService={(venue)=>this.markerService.add(venue)}
                     locations={this.state.locations}
                 />
                 <Map
+                    dataVenues={this.state.locations}
                     lat={this.state.baseLat}
                     lng={this.state.baseLng}
                     zoom={this.state.zoom}

@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 
-const ApiKey = 'AIzaSyCdH-NvXfoWzdwnhd2xYP7DsIQ54kSRAic';
+const ApiKey = 'AIzaSyCyfKT0snhZegcOAj-ZAyNgvLpLQT0iFpM';
 const FAPI_CLIENT_ID = 'H4MWPFTV2MD22GEGS2HYNECXWWNOQBU0AHIB5PSJG0U4LRN4';
 const FAPI_CLIENT_SECRET = 'FEJNQMXTTUJBI1MCVMIRKGAGRAUKFSLR423UKN0LSII3YTT1';
 let map;
@@ -105,6 +105,8 @@ class Map extends Component{
         isScriptReady: false,
     };
 
+
+
     getVenueId = (marker) => {
         let p = marker.getPosition().toUrlValue();
         let request = new Request(`https://api.foursquare.com/v2/venues/search?ll=${p}&client_id=${FAPI_CLIENT_ID}&query=${marker.title}&client_secret=${FAPI_CLIENT_SECRET}&llAcc=1000&radius=1000&v=20181029&limit=1`,{
@@ -129,7 +131,7 @@ class Map extends Component{
                                             <h4><a href="${result.response.venue.url}" target="_blank">${marker.title}</a></h4>
                                             <h5>People say!</h5>
                                             <p>...<i>${result.response.venue.tips.groups[0].items[0].text}</i>...</p>
-                                            <img src="${result.response.venue.bestPhoto.prefix}100x100${result.response.venue.bestPhoto.suffix}"> 
+                                            <img src="${result.response.venue.bestPhoto.prefix}100x100${result.response.venue.bestPhoto.suffix}">
                                             <p>Provided by <a href="https://developer.foursquare.com/" target="_blank">Foursquare API</a></p>
                                          </div>`)
                     })
@@ -145,7 +147,22 @@ class Map extends Component{
             this.setState({ isScriptReady: true });
         });
         document.body.appendChild(script);
+
     }
+
+    populateMapWithMarkers = () => {
+        let newLocations = [];
+        for (let i=0;i<this.props.dataVenues.length;i++){
+            let position = {
+                title: this.props.dataVenues[i].name,
+                location: {
+                    "lat": this.props.dataVenues[i].location.lat,
+                    "lng": this.props.dataVenues[i].location.lng}
+            };
+                newLocations.push(position);
+        }
+        return newLocations;
+    };
 
     componentDidUpdate() {
         if (this.state.isScriptReady) {
@@ -156,16 +173,16 @@ class Map extends Component{
                 {title: 'By The Way Bakery', location: {"lat": 40.9974559, "lng": -73.8778848}},
                 {title: 'Red Barn Bakery', location: {"lat": 41.038161, "lng": -73.870015}},
                 {title: 'Domenicks Nepperhan Italian', location: {"lat": 40.974258, "lng": -73.86907}},
-                {title: 'Lulu Cake Boutique', location: {"lat": 41.0032598, "lng": -73.8564513}}
             ];
             map = new window.google.maps.Map(this.mapRef.current, {
                 center: {lat: this.props.lat, lng: this.props.lng},
                 zoom: this.props.zoom,
                 styles: style,
             });
-            for (let i = 0; i < locations.length; i++) {
-                let position = locations[i].location;
-                let title = locations[i].title;
+            let locations2 = locations.concat(this.populateMapWithMarkers());
+            for (let i = 0; i < locations2.length; i++) {
+                let position = locations2[i].location;
+                let title = locations2[i].title;
                 let marker = new window.google.maps.Marker({
                     position: position,
                     title: title,
@@ -177,13 +194,13 @@ class Map extends Component{
                 bounds.extend(markers[i].position);
                 let info = new window.google.maps.InfoWindow();
                 marker.addListener('click', ()=> {
-                    console.log(marker.position);
                     info.open(map, marker);
                     marker.setAnimation(window.google.maps.Animation.BOUNCE);
                     this.displayFoursquareData(marker,info);
                 });
             }
             map.fitBounds(bounds);
+
         }
     }
 

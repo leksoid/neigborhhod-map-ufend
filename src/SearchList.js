@@ -11,10 +11,10 @@ class SearchList extends Component{
         this.setState({query: query.trim()})
     };
 
+
     render(){
         const {query} = this.state;
         let searchResults;
-        // TODO get a list of venues queried by 'Bakery' and display as a list
         if(query){
             const match = new RegExp(escapeRegExp(query),'i')
             searchResults = this.props.locations.filter((venues) => match.test(venues.name))
@@ -32,7 +32,10 @@ class SearchList extends Component{
                 />
                 <ul className='venues-list'>
                     {searchResults.map((venue)=>(
-                        <li key={venue.id}>
+                        <li
+                            key={venue.id}
+                            onClick={()=>this.props.selectListItem(venue)}
+                        >
                             <p>{venue.name}</p>
                         </li>
                         )

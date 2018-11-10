@@ -164,10 +164,17 @@ class Map extends Component{
         return newLocations;
     };
 
+    toggleMarkerInfoWindow = (info,map,marker) => {
+      info.open(map,marker);
+      marker.setAnimation(window.google.maps.Animation.BOUNCE);
+      this.displayFoursquareData(marker,info);
+    };
+
     componentDidUpdate() {
+        let markers =[];
+        let x;
         if (this.state.isScriptReady) {
             let bounds = new window.google.maps.LatLngBounds();
-            let markers =[];
             let locations = [
                 {title: 'Riviera Bakehouse', location: {"lat": 41.0111915, "lng": -73.8486300}},
                 {title: 'By The Way Bakery', location: {"lat": 40.9974559, "lng": -73.8778848}},
@@ -194,14 +201,21 @@ class Map extends Component{
                 bounds.extend(markers[i].position);
                 let info = new window.google.maps.InfoWindow();
                 marker.addListener('click', ()=> {
-                    info.open(map, marker);
-                    marker.setAnimation(window.google.maps.Animation.BOUNCE);
-                    this.displayFoursquareData(marker,info);
+                    x = (()=>this.toggleMarkerInfoWindow(info,map,marker))();
+                    // TODO make a closure anon function
                 });
+
             }
             map.fitBounds(bounds);
-
+            this.props.addMarker(markers);
+            //let info = new window.google.maps.InfoWindow();
+            //let m = this.props.toggleInfo();
+            //this.toggleMarkerInfoWindow(info,map,m);
         }
+
+
+        //console.log(this.props.toggleInfo)
+
     }
 
 

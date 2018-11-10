@@ -7,14 +7,23 @@ const FAPI_CLIENT_ID = 'H4MWPFTV2MD22GEGS2HYNECXWWNOQBU0AHIB5PSJG0U4LRN4';
 const FAPI_CLIENT_SECRET = 'FEJNQMXTTUJBI1MCVMIRKGAGRAUKFSLR423UKN0LSII3YTT1';
 
 class MarkerService {
-    // TODO make Add and Activate functions
 
-    add(venue){
-        this.activeMarker = venue;
-        console.log(this.activeMarker);
+    add(marker){
+      this.markerList = marker;
+      console.log(this.markerList);
+      return this.markerList;
     }
-    activate(){
 
+    activate(venue){
+      this.selectedVenue = venue;
+      console.log(this.toggleInfo());
+      return this.toggleInfo();
+      //return this.selectedVenue;
+    }
+
+    toggleInfo(){
+      this.foundMarker = this.markerList.find(e => e.title === this.selectedVenue)
+      return this.foundMarker;
     }
 }
 
@@ -27,6 +36,10 @@ class App extends Component {
         locations:[],  // TODO pass to search
         filteredLocations:[] // TODO pass to map
     };
+
+    addMarkerToState=()=>{
+      this.setState({marker: this.markerService.toggleInfo()});
+    }
 
     componentDidMount() {
         this.getAllVenuesOnMapLoad().then((locations) => {
@@ -48,10 +61,12 @@ class App extends Component {
         return (
             <div className='app'>
                 <Sidebar
-                    addMarkerToService={(venue)=>this.markerService.add(venue)}
                     locations={this.state.locations}
+                    activate={(venue)=>this.markerService.activate(venue)}
                 />
                 <Map
+                    addMarker={(marker,f)=>this.markerService.add(marker,f)}
+                    toggleInfo={()=>this.markerService.toggleInfo()}
                     dataVenues={this.state.locations}
                     lat={this.state.baseLat}
                     lng={this.state.baseLng}

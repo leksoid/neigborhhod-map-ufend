@@ -34,7 +34,7 @@ class SearchList extends Component{
                     {searchResults.map((venue)=>(
                         <li
                             key={venue.id}
-                            onClick={()=>this.props.selectListItem(venue)}
+                            onClick={()=>this.props.selectListItem(venue.name)}
                         >
                             <p>{venue.name}</p>
                         </li>

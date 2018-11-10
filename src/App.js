@@ -6,27 +6,6 @@ import Map from "./Map";
 const FAPI_CLIENT_ID = 'H4MWPFTV2MD22GEGS2HYNECXWWNOQBU0AHIB5PSJG0U4LRN4';
 const FAPI_CLIENT_SECRET = 'FEJNQMXTTUJBI1MCVMIRKGAGRAUKFSLR423UKN0LSII3YTT1';
 
-class MarkerService {
-
-    add(marker){
-      this.markerList = marker;
-      console.log(this.markerList);
-      return this.markerList;
-    }
-
-    activate(venue){
-      this.selectedVenue = venue;
-      console.log(this.toggleInfo());
-      return this.toggleInfo();
-      //return this.selectedVenue;
-    }
-
-    toggleInfo(){
-      this.foundMarker = this.markerList.find(e => e.title === this.selectedVenue)
-      return this.foundMarker;
-    }
-}
-
 class App extends Component {
 
     state = {
@@ -38,7 +17,7 @@ class App extends Component {
     };
 
     addMarkerToState=()=>{
-      this.setState({marker: this.markerService.toggleInfo()});
+      this.markerService.toggleInfo();
     }
 
     componentDidMount() {
@@ -46,7 +25,6 @@ class App extends Component {
             this.setState({locations})
         })
         // TODO init new marker service
-        this.markerService = new MarkerService();
     };
 
     getAllVenuesOnMapLoad = () => {
@@ -57,17 +35,20 @@ class App extends Component {
             .then(data => data.response.venues)
     };
 
+    clickListItem = (venue) => {
+      this.setState({ venueFromList: venue})
+    }
+
     render(){
         return (
             <div className='app'>
                 <Sidebar
                     locations={this.state.locations}
-                    activate={(venue)=>this.markerService.activate(venue)}
+                    clickListItem={this.clickListItem}
                 />
                 <Map
-                    addMarker={(marker,f)=>this.markerService.add(marker,f)}
-                    toggleInfo={()=>this.markerService.toggleInfo()}
                     dataVenues={this.state.locations}
+                    selectedVenue={this.state.venueFromList}
                     lat={this.state.baseLat}
                     lng={this.state.baseLng}
                     zoom={this.state.zoom}

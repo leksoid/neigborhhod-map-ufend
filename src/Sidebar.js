@@ -11,7 +11,7 @@ class Sidebar extends Component{
                     </h1>
                 </div>
                 <SearchList
-                    selectListItem={(venue)=>this.props.activate(venue)}
+                    clickListItem={(venue)=>this.props.clickListItem(venue)}
                     locations={this.props.locations}
                 />
                 <div className='footer'></div>

@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 
-const ApiKey = 'AIzaSyCyfKT0snhZegcOAj-ZAyNgvLpLQT0iFpM';
+const ApiKey = 'AIzaSyAJBATI4oL2Fo9SAwGQN9WgQSi2aGQtJSY';
 const FAPI_CLIENT_ID = 'H4MWPFTV2MD22GEGS2HYNECXWWNOQBU0AHIB5PSJG0U4LRN4';
 const FAPI_CLIENT_SECRET = 'FEJNQMXTTUJBI1MCVMIRKGAGRAUKFSLR423UKN0LSII3YTT1';
 let map;
@@ -207,15 +207,13 @@ class Map extends Component{
 
             }
             map.fitBounds(bounds);
-            this.props.addMarker(markers);
-            //let info = new window.google.maps.InfoWindow();
-            //let m = this.props.toggleInfo();
-            //this.toggleMarkerInfoWindow(info,map,m);
+
         }
-
-
-        //console.log(this.props.toggleInfo)
-
+        if (this.props.selectedVenue != undefined){
+          let toggledMarker = markers.filter(e=>e.title === this.props.selectedVenue);
+          let toggledInfo = new window.google.maps.InfoWindow();
+          this.toggleMarkerInfoWindow(toggledInfo,map,toggledMarker[0]);
+        }
     }
 
 

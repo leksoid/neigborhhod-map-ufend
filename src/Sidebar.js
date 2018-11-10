@@ -11,6 +11,7 @@ class Sidebar extends Component{
                     </h1>
                 </div>
                 <SearchList
+                    filterLocations={(query)=>this.props.filterLocations(query)}
                     clickListItem={(venue)=>this.props.clickListItem(venue)}
                     locations={this.props.locations}
                 />

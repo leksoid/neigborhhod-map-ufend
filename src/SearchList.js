@@ -5,10 +5,12 @@ class SearchList extends Component{
 
     state = {
         query: ''
+
     };
 
     updateQeury = (query)=>{
-        this.setState({query: query.trim()})
+        this.setState({query: query})
+        this.props.filterLocations(query);
     };
 
 

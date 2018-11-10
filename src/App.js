@@ -12,8 +12,8 @@ class App extends Component {
         baseLat: 29.7844913,
         baseLng: -95.7800231,
         zoom: 12,
-        locations:[],  // TODO pass to search
-        filteredLocations:[] // TODO pass to map
+        locations: [],  // TODO pass to search
+        filteredLocations: [] // TODO pass to map
     };
 
     addMarkerToState=()=>{
@@ -21,11 +21,13 @@ class App extends Component {
     }
 
     componentDidMount() {
-        this.getAllVenuesOnMapLoad().then((locations) => {
-            this.setState({locations})
-        })
-        // TODO init new marker service
-    };
+          this.getAllVenuesOnMapLoad().then((locations) => {
+              this.setState({
+                locations: locations,
+                filteredLocations: locations
+              })
+          })
+      }
 
     getAllVenuesOnMapLoad = () => {
         let request = new Request(`https://api.foursquare.com/v2/venues/search?ll=41.0111915,-73.8486300&client_id=${FAPI_CLIENT_ID}&query=bakery&client_secret=${FAPI_CLIENT_SECRET}&v=20181029`,{
@@ -39,15 +41,28 @@ class App extends Component {
       this.setState({ venueFromList: venue})
     }
 
+    updateQuery = (query) => {
+      this.setState({
+        ...this.state,
+        venueFromList: null,
+        filteredLocations: this.filterLocations(this.state.locations, query)
+      });
+    }
+
+    filterLocations = (locations, query) => {
+      return locations.filter(location => location.name.includes(query));
+    }
+
     render(){
         return (
             <div className='app'>
                 <Sidebar
-                    locations={this.state.locations}
+                    filterLocations={this.updateQuery}
+                    locations={this.state.filteredLocations}
                     clickListItem={this.clickListItem}
                 />
                 <Map
-                    dataVenues={this.state.locations}
+                    dataVenues={this.state.filteredLocations}
                     selectedVenue={this.state.venueFromList}
                     lat={this.state.baseLat}
                     lng={this.state.baseLng}

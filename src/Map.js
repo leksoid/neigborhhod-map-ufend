@@ -4,6 +4,7 @@ const ApiKey = 'AIzaSyAJBATI4oL2Fo9SAwGQN9WgQSi2aGQtJSY';
 const FAPI_CLIENT_ID = 'H4MWPFTV2MD22GEGS2HYNECXWWNOQBU0AHIB5PSJG0U4LRN4';
 const FAPI_CLIENT_SECRET = 'FEJNQMXTTUJBI1MCVMIRKGAGRAUKFSLR423UKN0LSII3YTT1';
 let map;
+
 let style = [
     {
         "featureType": "administrative",
@@ -41,7 +42,7 @@ let style = [
         "featureType": "poi",
         "stylers": [
             {
-                "visibility": "off"
+                "visibility": "on"
             }
         ]
     },
@@ -151,7 +152,7 @@ class Map extends Component{
     }
 
     populateMapWithMarkers = () => {
-        let newLocations = [];
+        let locations = [];
         for (let i=0;i<this.props.dataVenues.length;i++){
             let position = {
                 title: this.props.dataVenues[i].name,
@@ -159,9 +160,9 @@ class Map extends Component{
                     "lat": this.props.dataVenues[i].location.lat,
                     "lng": this.props.dataVenues[i].location.lng}
             };
-                newLocations.push(position);
+                locations.push(position);
         }
-        return newLocations;
+        return locations;
     };
 
     toggleMarkerInfoWindow = (info,map,marker) => {
@@ -172,24 +173,17 @@ class Map extends Component{
 
     componentDidUpdate() {
         let markers =[];
-        let x;
         if (this.state.isScriptReady) {
             let bounds = new window.google.maps.LatLngBounds();
-            let locations = [
-                {title: 'Riviera Bakehouse', location: {"lat": 41.0111915, "lng": -73.8486300}},
-                {title: 'By The Way Bakery', location: {"lat": 40.9974559, "lng": -73.8778848}},
-                {title: 'Red Barn Bakery', location: {"lat": 41.038161, "lng": -73.870015}},
-                {title: 'Domenicks Nepperhan Italian', location: {"lat": 40.974258, "lng": -73.86907}},
-            ];
+            let locations = this.populateMapWithMarkers();
             map = new window.google.maps.Map(this.mapRef.current, {
                 center: {lat: this.props.lat, lng: this.props.lng},
                 zoom: this.props.zoom,
                 styles: style,
             });
-            let locations2 = locations.concat(this.populateMapWithMarkers());
-            for (let i = 0; i < locations2.length; i++) {
-                let position = locations2[i].location;
-                let title = locations2[i].title;
+            for (let i = 0; i < locations.length; i++) {
+                let position = locations[i].location;
+                let title = locations[i].title;
                 let marker = new window.google.maps.Marker({
                     position: position,
                     title: title,
@@ -201,13 +195,11 @@ class Map extends Component{
                 bounds.extend(markers[i].position);
                 let info = new window.google.maps.InfoWindow();
                 marker.addListener('click', ()=> {
-                    x = (()=>this.toggleMarkerInfoWindow(info,map,marker))();
-                    // TODO make a closure anon function
+                    this.toggleMarkerInfoWindow(info,map,marker);
                 });
 
             }
             map.fitBounds(bounds);
-
         }
         if (this.props.selectedVenue != undefined){
           let toggledMarker = markers.filter(e=>e.title === this.props.selectedVenue);
@@ -215,7 +207,6 @@ class Map extends Component{
           this.toggleMarkerInfoWindow(toggledInfo,map,toggledMarker[0]);
         }
     }
-
 
     render(){
         return(

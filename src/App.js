@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Sidebar from "./Sidebar";
 import Map from "./Map";
+import escapeRegExp from 'escape-string-regexp'
 
 const FAPI_CLIENT_ID = 'H4MWPFTV2MD22GEGS2HYNECXWWNOQBU0AHIB5PSJG0U4LRN4';
 const FAPI_CLIENT_SECRET = 'FEJNQMXTTUJBI1MCVMIRKGAGRAUKFSLR423UKN0LSII3YTT1';
@@ -11,14 +12,10 @@ class App extends Component {
     state = {
         baseLat: 29.7844913,
         baseLng: -95.7800231,
-        zoom: 12,
-        locations: [],  // TODO pass to search
-        filteredLocations: [] // TODO pass to map
+        zoom: 10,
+        locations: [],
+        filteredLocations: []
     };
-
-    addMarkerToState=()=>{
-      this.markerService.toggleInfo();
-    }
 
     componentDidMount() {
           this.getAllVenuesOnMapLoad().then((locations) => {
@@ -45,19 +42,20 @@ class App extends Component {
       this.setState({
         ...this.state,
         venueFromList: null,
-        filteredLocations: this.filterLocations(this.state.locations, query)
+        filteredLocations: this.filterVenues(this.state.locations, query)
       });
     }
 
-    filterLocations = (locations, query) => {
-      return locations.filter(location => location.name.includes(query));
+    filterVenues = (locations, query) => {
+      const match = new RegExp(escapeRegExp(query),'i');
+      return locations.filter((venues) => match.test(venues.name))
     }
 
     render(){
         return (
             <div className='app'>
                 <Sidebar
-                    filterLocations={this.updateQuery}
+                    filterVenues={this.updateQuery}
                     locations={this.state.filteredLocations}
                     clickListItem={this.clickListItem}
                 />

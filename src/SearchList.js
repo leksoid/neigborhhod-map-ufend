@@ -5,7 +5,6 @@ class SearchList extends Component{
 
     state = {
         query: ''
-
     };
 
     updateQeury = (query)=>{
@@ -13,16 +12,8 @@ class SearchList extends Component{
         this.props.filterLocations(query);
     };
 
-
     render(){
         const {query} = this.state;
-        let searchResults;
-        if(query){
-            const match = new RegExp(escapeRegExp(query),'i')
-            searchResults = this.props.locations.filter((venues) => match.test(venues.name))
-        } else {
-            searchResults = this.props.locations;
-        }
         return(
             <div>
                 <input
@@ -33,7 +24,7 @@ class SearchList extends Component{
                     onChange={(event)=> this.updateQeury(event.target.value)}
                 />
                 <ul className='venues-list'>
-                    {searchResults.map((venue)=>(
+                    {this.props.locations.map((venue)=>(
                         <li
                             key={venue.id}
                             onClick={()=>this.props.clickListItem(venue.name)}

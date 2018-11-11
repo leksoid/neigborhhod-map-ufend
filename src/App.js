@@ -32,6 +32,7 @@ class App extends Component {
         });
         return fetch(request).then(res => res.json())
             .then(data => data.response.venues)
+            .catch(error => console.error(error))
     };
 
     clickListItem = (venue) => {

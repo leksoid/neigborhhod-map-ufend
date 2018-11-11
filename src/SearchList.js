@@ -24,7 +24,7 @@ class SearchList extends Component{
                     onChange={(event)=> this.updateQeury(event.target.value)}
                 />
                 <ul className='venues-list'>
-                    {this.props.locations.map((venue)=>(
+                    {this.props.locations != null ? this.props.locations.map((venue)=>(
                         <li
                             key={venue.id}
                             onClick={()=>this.props.clickListItem(venue.name)}
@@ -33,6 +33,8 @@ class SearchList extends Component{
                         </li>
                         )
 
+                    ) : (
+                      <p>No venues found, some Foursquare API error</p>
                     )}
                 </ul>
             </div>

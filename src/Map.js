@@ -116,7 +116,7 @@ class Map extends Component{
         return fetch(request)
             .then((response) => response.json())
             .then((result) => {
-                return result.response.venues.length > 0 ? result.response.venues[0].id : "No venue found in DB";
+                return result.response.venues != undefined ? result.response.venues[0].id : "No venue found in DB";
             });
     };
 
@@ -132,42 +132,54 @@ class Map extends Component{
                                             <h4><a href="${result.response.venue.url}" target="_blank">${marker.title}</a></h4>
                                             <h5>People say!</h5>
                                             <p>...<i>${result.response.venue.tips.groups[0].items[0].text}</i>...</p>
-                                            <img src="${result.response.venue.bestPhoto.prefix}100x100${result.response.venue.bestPhoto.suffix}">
+                                            <img src="${result.response.venue.bestPhoto.prefix}100x100${result.response.venue.bestPhoto.suffix}" alt="${marker.title} bakery">
                                             <p>Provided by <a href="https://developer.foursquare.com/" target="_blank">Foursquare API</a></p>
                                          </div>`)
                     })
             });
     };
 
+    gm_authFailure = () => {
+      alert("Google Map authorization error. Please try refreshing the page.");
+    }
+
     componentDidMount() {
         const script = document.createElement('script');
         script.src = `https://maps.googleapis.com/maps/api/js?key=${ApiKey}`;
         script.async = true;
         script.defer = true;
+        //script.addEventListener("error", this.gm_authFailure());
         script.addEventListener('load', () => {
             this.setState({ isScriptReady: true });
         });
         document.body.appendChild(script);
-
+        script.onerror = ()=>this.gm_authFailure();
     }
 
     populateMapWithMarkers = () => {
         let locations = [];
-        for (let i=0;i<this.props.dataVenues.length;i++){
-            let position = {
-                title: this.props.dataVenues[i].name,
-                location: {
-                    "lat": this.props.dataVenues[i].location.lat,
-                    "lng": this.props.dataVenues[i].location.lng}
-            };
-                locations.push(position);
+        if (this.props.dataVenues != undefined){
+          for (let i=0;i<this.props.dataVenues.length;i++){
+              let position = {
+                  title: this.props.dataVenues[i].name,
+                  location: {
+                      "lat": this.props.dataVenues[i].location.lat,
+                      "lng": this.props.dataVenues[i].location.lng}
+              };
+                  locations.push(position);
+          }
         }
         return locations;
     };
 
+    removeBounce = (marker) =>{
+      setTimeout(marker.setAnimation(null),5000);
+    }
+
     toggleMarkerInfoWindow = (info,map,marker) => {
       info.open(map,marker);
       marker.setAnimation(window.google.maps.Animation.BOUNCE);
+      this.removeBounce(marker);
       this.displayFoursquareData(marker,info);
     };
 

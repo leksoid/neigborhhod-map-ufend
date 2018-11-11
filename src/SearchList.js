@@ -26,6 +26,8 @@ class SearchList extends Component{
                 <ul className='venues-list'>
                     {this.props.locations != null ? this.props.locations.map((venue)=>(
                         <li
+                            tabIndex={0}
+                            aria-labelledby={`Bakery name`}
                             key={venue.id}
                             onClick={()=>this.props.clickListItem(venue.name)}
                         >

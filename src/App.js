@@ -52,9 +52,18 @@ class App extends Component {
       return locations.filter((venues) => match.test(venues.name))
     }
 
+    dosomething = () => {
+      if (window.screen.availWidth < 600) {
+        window.document.querySelector('.sidebar').style.display = 'block';
+        window.document.querySelector('.fas.fa-search-location').style.display = 'none';
+      }
+
+    }
+
     render(){
         return (
             <div className='app'>
+              <div><i class="fas fa-search-location" onClick={()=>this.dosomething()}/></div>
                 <Sidebar
                     filterVenues={this.updateQuery}
                     locations={this.state.filteredLocations}

@@ -12,6 +12,13 @@ class SearchList extends Component{
         this.props.filterLocations(query);
     };
 
+    dosomething = () => {
+      if (window.screen.availWidth < 600) {
+        window.document.querySelector('.sidebar').style.display = 'none';
+        window.document.querySelector('.fas.fa-search-location').style.display = 'block';
+      }
+    }
+
     render(){
         const {query} = this.state;
         return(
@@ -29,7 +36,10 @@ class SearchList extends Component{
                             tabIndex={0}
                             aria-labelledby={`Bakery name`}
                             key={venue.id}
-                            onClick={()=>this.props.clickListItem(venue.name)}
+                            onClick={()=>{
+                              this.props.clickListItem(venue.name)
+                              this.dosomething();
+                            }}
                         >
                             <p>{venue.name}</p>
                         </li>

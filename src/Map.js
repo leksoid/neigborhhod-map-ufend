@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 
-const ApiKey = 'AIzaSyAJBATI4oL2Fo9SAwGQN9WgQSi2aGQtJSY';
-const FAPI_CLIENT_ID = 'H4MWPFTV2MD22GEGS2HYNECXWWNOQBU0AHIB5PSJG0U4LRN4';
-const FAPI_CLIENT_SECRET = 'FEJNQMXTTUJBI1MCVMIRKGAGRAUKFSLR423UKN0LSII3YTT1';
+const ApiKey = 'AIzaSyCjUVNnmvoiMcOo76AoAinIzOFNelxyegQ';
+const FAPI_CLIENT_ID = 'CTEZZWC3QPHDYIPIXGG5KTM0G4JXPTAMDK5D5W0X30G0A4H2';
+const FAPI_CLIENT_SECRET = 'QE253JG20R4HQXEHZDYNKDOKOGJVEN05S21B34HU2DQO1WXE';
 let map;
 
 let style = [
@@ -173,7 +173,7 @@ class Map extends Component{
     };
 
     removeBounce = (marker) =>{
-      setTimeout(marker.setAnimation(null),5000);
+      setTimeout(function(){marker.setAnimation(null)},2000);
     }
 
     toggleMarkerInfoWindow = (info,map,marker) => {

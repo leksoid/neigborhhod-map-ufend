@@ -22,15 +22,16 @@ class SearchList extends Component{
     render(){
         const {query} = this.state;
         return(
-            <div>
+            <nav>
                 <input
                     className='search-venues'
                     type='text'
                     placeholder='Search venues ...'
                     value={query}
                     onChange={(event)=> this.updateQeury(event.target.value)}
+                    aria-label="Search Field"
                 />
-                <ul className='venues-list'>
+                <ul className='venues-list' role="list">
                     {this.props.locations != null ? this.props.locations.map((venue)=>(
                         <li
                             tabIndex={0}
@@ -40,6 +41,7 @@ class SearchList extends Component{
                               this.props.clickListItem(venue.name)
                               this.dosomething();
                             }}
+                            role="listitem button"
                         >
                             <p>{venue.name}</p>
                         </li>
@@ -49,7 +51,7 @@ class SearchList extends Component{
                       <p>No venues found, some Foursquare API error</p>
                     )}
                 </ul>
-            </div>
+            </nav>
         )
     }
 }

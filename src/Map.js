@@ -129,7 +129,7 @@ class Map extends Component{
                     .then((result)=>{
                         info
                             .setContent(`<div class="infoWindow" id="${result.response.venue.id}">
-                                            <h4><a href="${result.response.venue.url}" target="_blank">${marker.title}</a></h4>
+                                            <h4><a href="${result.response.venue.url}" target="_blank" role="link">${marker.title}</a></h4>
                                             <h5>People say!</h5>
                                             <p>...<i>${result.response.venue.tips.groups[0].items[0].text}</i>...</p>
                                             <img src="${result.response.venue.bestPhoto.prefix}100x100${result.response.venue.bestPhoto.suffix}" alt="${marker.title} bakery">

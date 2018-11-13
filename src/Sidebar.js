@@ -12,19 +12,19 @@ class Sidebar extends Component{
 
     render(){
         return(
-            <div className='sidebar'>
-                <div className='header'>
+            <aside className='sidebar'>
+                <header className='header'>
                     <h1>
                         Westchester Bakeries
                     </h1>
                     <i class="fas fa-times-circle" onClick={()=>this.dosomething()}></i>
-                </div>
+                </header>
                 <SearchList
                     filterLocations={(query)=>this.props.filterVenues(query)}
                     clickListItem={(venue)=>this.props.clickListItem(venue)}
                     locations={this.props.locations}
                 />
-            </div>
+            </aside>
         )
     }
 }

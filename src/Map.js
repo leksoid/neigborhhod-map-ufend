@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 
-const ApiKey = 'AIzaSyBlWasVIcs4kTZKI60LaouyUn-09oR6N8o';
+const ApiKey = 'AIzaSyCerM6vRi2bzbh7LCueDd5ujWhyhzVVjPQ';
 const FAPI_CLIENT_ID = 'MXNSOZOYERHQ5M0YYOZXZ11PI3HHNSU1KNURXGRQ3CLQJQPY';
 const FAPI_CLIENT_SECRET = 'BOHDDWLOIK3U0N3HXTBMJTW2JJR2YTGEZ5RGDN0L1VDXBA2B';;
 let map;
@@ -148,11 +148,9 @@ class Map extends Component{
             this.setState({ isScriptReady: true });
         });
         document.body.appendChild(script);
-        script.onerror = ()=>this.gm_authFailure();
-    }
-
-    gm_authFailure = () => {
-      alert("Google Map authorization error. Please try refreshing the page.");
+        script.onerror = window.gm_authFailure = () => {
+          alert("Google Map authorization error. Either API key is invalid or the quota exceeded, try check again later");
+        };
     }
 
     populateMapWithMarkers = () => {

@@ -31,11 +31,11 @@ class SearchList extends Component{
                     onChange={(event)=> this.updateQeury(event.target.value)}
                     aria-label="Search Field"
                 />
-                <ul className='venues-list' role="list">
+                <ul className='venues-list'>
                     {this.props.locations != null ? this.props.locations.map((venue)=>(
                         <li
                             tabIndex={0}
-                            aria-labelledby={`Bakery name`}
+                            aria-label={`Bakery name`}
                             key={venue.id}
                             onClick={()=>{
                               this.props.clickListItem(venue.name)

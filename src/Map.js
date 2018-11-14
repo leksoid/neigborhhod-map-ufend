@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 
-const ApiKey = 'AIzaSyCjUVNnmvoiMcOo76AoAinIzOFNelxyegQ';
-const FAPI_CLIENT_ID = 'CTEZZWC3QPHDYIPIXGG5KTM0G4JXPTAMDK5D5W0X30G0A4H2';
-const FAPI_CLIENT_SECRET = 'QE253JG20R4HQXEHZDYNKDOKOGJVEN05S21B34HU2DQO1WXE';
+const ApiKey = 'AIzaSyBlWasVIcs4kTZKI60LaouyUn-09oR6N8o';
+const FAPI_CLIENT_ID = 'MXNSOZOYERHQ5M0YYOZXZ11PI3HHNSU1KNURXGRQ3CLQJQPY';
+const FAPI_CLIENT_SECRET = 'BOHDDWLOIK3U0N3HXTBMJTW2JJR2YTGEZ5RGDN0L1VDXBA2B';;
 let map;
 
 let style = [
@@ -117,7 +117,7 @@ class Map extends Component{
             .then((response) => response.json())
             .then((result) => {
                 return result.response.venues != undefined ? result.response.venues[0].id : "No venue found in DB";
-            });
+            }).catch(error => alert(`Foursquare API error: ${error}`));
     };
 
     displayFoursquareData = (marker,info) => {
@@ -136,19 +136,14 @@ class Map extends Component{
                                             <p>Provided by <a href="https://developer.foursquare.com/" target="_blank">Foursquare API</a></p>
                                          </div>`)
                     })
-            });
+            }).catch(error => alert(`Foursquare API error: ${error}`));
     };
-
-    gm_authFailure = () => {
-      alert("Google Map authorization error. Please try refreshing the page.");
-    }
 
     componentDidMount() {
         const script = document.createElement('script');
         script.src = `https://maps.googleapis.com/maps/api/js?key=${ApiKey}`;
         script.async = true;
         script.defer = true;
-        //script.addEventListener("error", this.gm_authFailure());
         script.addEventListener('load', () => {
             this.setState({ isScriptReady: true });
         });
@@ -156,9 +151,13 @@ class Map extends Component{
         script.onerror = ()=>this.gm_authFailure();
     }
 
+    gm_authFailure = () => {
+      alert("Google Map authorization error. Please try refreshing the page.");
+    }
+
     populateMapWithMarkers = () => {
         let locations = [];
-        if (this.props.dataVenues != undefined){
+        if (this.props.dataVenues !== undefined){
           for (let i=0;i<this.props.dataVenues.length;i++){
               let position = {
                   title: this.props.dataVenues[i].name,

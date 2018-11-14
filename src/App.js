@@ -4,8 +4,8 @@ import Sidebar from "./Sidebar";
 import Map from "./Map";
 import escapeRegExp from 'escape-string-regexp'
 
-const FAPI_CLIENT_ID = 'CTEZZWC3QPHDYIPIXGG5KTM0G4JXPTAMDK5D5W0X30G0A4H2';
-const FAPI_CLIENT_SECRET = 'QE253JG20R4HQXEHZDYNKDOKOGJVEN05S21B34HU2DQO1WXE';
+const FAPI_CLIENT_ID = 'MXNSOZOYERHQ5M0YYOZXZ11PI3HHNSU1KNURXGRQ3CLQJQPY';
+const FAPI_CLIENT_SECRET = 'BOHDDWLOIK3U0N3HXTBMJTW2JJR2YTGEZ5RGDN0L1VDXBA2B';
 
 class App extends Component {
 
@@ -32,7 +32,7 @@ class App extends Component {
         });
         return fetch(request).then(res => res.json())
             .then(data => data.response.venues)
-            .catch(error => console.error(error))
+            .catch(error => alert(`Foursquare API error: ${error}`))
     };
 
     clickListItem = (venue) => {
@@ -52,7 +52,7 @@ class App extends Component {
       return locations.filter((venues) => match.test(venues.name))
     }
 
-    dosomething = () => {
+    showSidebar = () => {
       if (window.screen.availWidth < 600) {
         window.document.querySelector('.sidebar').style.display = 'block';
         window.document.querySelector('.fas.fa-search-location').style.display = 'none';
@@ -63,7 +63,7 @@ class App extends Component {
     render(){
         return (
             <div className='app'>
-              <div><i class="fas fa-search-location" onClick={()=>this.dosomething()}/></div>
+              <div><i className="fas fa-search-location" onClick={()=>this.showSidebar()}/></div>
                 <Sidebar
                     filterVenues={this.updateQuery}
                     locations={this.state.filteredLocations}
